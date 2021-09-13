@@ -19,8 +19,6 @@ namespace TwitterBattlesAPI
 {
     public class Startup
     {
-        private readonly string _policyName = "CorsPolicy";
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -41,15 +39,7 @@ namespace TwitterBattlesAPI
 
             services.AddScoped<IUserRepo, SqlUserRepo>();
 
-            services.AddCors(opt =>
-            {
-                opt.AddPolicy(name: _policyName, builder =>
-                {
-                    builder.AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
-            });
+            services.AddCors(opt => opt.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
             
             services.AddSwaggerGen(c =>
             {
@@ -67,11 +57,12 @@ namespace TwitterBattlesAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TwitterBattles v1"));
             }
 
+            //must be before UseHttpsRedirection
+            app.UseCors();
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseCors(_policyName);
 
             app.UseAuthorization();
 
