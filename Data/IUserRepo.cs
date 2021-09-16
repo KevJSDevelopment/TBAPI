@@ -6,10 +6,12 @@ namespace TwitterBattlesAPI.Data
     public interface IUserRepo
     {
         bool SaveChanges();
-        IEnumerable<User> GetAllUsers();
-        User GetUserById(int id);
+        ICollection<User> GetAllUsers();
+        User GetUserByUsername(string username);
         void CreateUser(User user);
         void UpdateUser(User user);
         void DeleteUser(User user);
+        void AddTweet(Tweet tweet);
+        ICollection<Tweet> GetTweets();
     }
 }

@@ -2,17 +2,18 @@ using AutoMapper;
 using TwitterBattlesAPI.Dtos;
 using TwitterBattlesAPI.Models;
 
-namespace TwitterBattlesAPI
+namespace TwitterBattlesAPI.Profiles
 {
-    public class UserProfile : Profile
+    public class UsersProfile : Profile
     {
-        public UserProfile()
+        public UsersProfile()
         {
             CreateMap<User, UserReadDto>();
             CreateMap<User, UserCreateDto>();
             CreateMap<UserCreateDto, User>();
             CreateMap<UserUpdateDto, User>();
             CreateMap<User, UserUpdateDto>();
+            CreateMap<TweetCreateDto, Tweet>();
         }
     }
 }

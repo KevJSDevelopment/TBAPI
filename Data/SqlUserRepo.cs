@@ -34,14 +34,14 @@ namespace TwitterBattlesAPI.Data
             _context.Users.Remove(user);
         }
 
-        public IEnumerable<User> GetAllUsers()
+        public ICollection<User> GetAllUsers()
         {
             return _context.Users.ToList();
         }
 
-        public User GetUserById(int id)
+        public User GetUserByUsername(string username)
         {
-            return _context.Users.FirstOrDefault(p => p.Id == id);
+            return _context.Users.FirstOrDefault(p => p.Username == username);
         }
 
         public bool SaveChanges()
@@ -53,6 +53,25 @@ namespace TwitterBattlesAPI.Data
         public void UpdateUser(User user)
         {
             //Nothing
+        }
+
+        public void AddTweet(Tweet tweet)
+        {
+            if(tweet == null)
+            {
+                throw new ArgumentNullException(nameof(tweet));
+            }
+
+            _context.Tweets.Add(tweet);
+        }
+
+        public ICollection<Tweet> GetTweets() 
+        {
+            var tweets = _context.Tweets.ToList();
+
+            tweets.Sort((a, b) => DateTime.Compare(b.CreatedDate, a.CreatedDate));
+
+            return tweets;
         }
     }
 }

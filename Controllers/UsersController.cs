@@ -9,7 +9,7 @@ using System;
 
 namespace TwitterBattlesAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("poketwitter")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -24,18 +24,18 @@ namespace TwitterBattlesAPI.Controllers
 
         //GET api/Users
         [HttpGet]
-        public ActionResult<IEnumerable<UserCreateDto>> GetAllUsers()
+        public ActionResult<ICollection<UserCreateDto>> GetAllUsers()
         {
             var userItems = _repository.GetAllUsers();
 
-            return Ok(_mapper.Map<IEnumerable<UserCreateDto>>(userItems));
+            return Ok(_mapper.Map<ICollection<UserCreateDto>>(userItems));
         }
 
-        //GET api/Users/{id}
-        [HttpGet("{id}", Name="GetUserById")]
-        public ActionResult<UserCreateDto> GetUserById(int id)
+        //GET api/Users/{Username}
+        [HttpGet("{Username}", Name="GetUserByUsername")]
+        public ActionResult<UserCreateDto> GetUserByUsername(string username)
         {
-            var userItem = _repository.GetUserById(id);
+            var userItem = _repository.GetUserByUsername(username);
 
             if(userItem != null){
                 return Ok(_mapper.Map<UserCreateDto>(userItem));
@@ -44,6 +44,32 @@ namespace TwitterBattlesAPI.Controllers
             return NotFound();
         }
 
+        [HttpGet("/tweets")]
+        public ActionResult<ICollection<Tweet>> GetTweets()
+        {
+            var tweets = _repository.GetTweets();
+
+            return Ok(tweets);
+        }
+
+        [HttpPost("{Username}")]
+        public ActionResult<Tweet> AddTweet([FromRoute] string username, [FromBody] TweetCreateDto tweetCreateDto)
+        {
+            var userItem = _repository.GetUserByUsername(username);
+
+            if(userItem != null && tweetCreateDto != null){
+                var newTweet = _mapper.Map<Tweet>(tweetCreateDto);
+                newTweet.UserId = userItem.Id;
+                newTweet.CreatedDate = DateTime.Now;
+                _repository.AddTweet(newTweet);
+                _repository.SaveChanges();
+
+                return Ok(newTweet);
+            }
+            
+            return NotFound();
+
+        }
         //POST api/Users
         [HttpPost]
         public ActionResult <UserReadDto> CreateUser(UserCreateDto userCreateDto)
@@ -54,14 +80,14 @@ namespace TwitterBattlesAPI.Controllers
 
             var userReadDto = _mapper.Map<UserReadDto>(userModel);
 
-            return CreatedAtRoute(nameof(GetUserById), new {Id = userReadDto.Id}, userReadDto);
+            return CreatedAtRoute(nameof(GetUserByUsername), new {Username = userReadDto.Username}, userReadDto);
         }
 
-        //PUT api/Users/{id}
-        [HttpPut("{id}")]
-        public ActionResult UpdateUser(int id, UserUpdateDto userUpdateDto)
+        //PUT api/Users/{username}
+        [HttpPut("{username}")]
+        public ActionResult UpdateUser(string username, UserUpdateDto userUpdateDto)
         {
-            var userModelFromRepo = _repository.GetUserById(id);
+            var userModelFromRepo = _repository.GetUserByUsername(username);
 
             if(userModelFromRepo == null)
             {
@@ -77,12 +103,12 @@ namespace TwitterBattlesAPI.Controllers
             return NoContent();
         }
 
-        //PATCH api/users/{id}
-        [HttpPatch("{id}")]
-        public ActionResult PartialUserUpdate(int id, JsonPatchDocument<UserUpdateDto> patchDoc)
+        //PATCH api/users/{username}
+        [HttpPatch("{username}")]
+        public ActionResult PartialUserUpdate(string username, JsonPatchDocument<UserUpdateDto> patchDoc)
         {
 
-            var userModelFromRepo = _repository.GetUserById(id);
+            var userModelFromRepo = _repository.GetUserByUsername(username);
 
             if(userModelFromRepo == null)
             {
@@ -107,10 +133,10 @@ namespace TwitterBattlesAPI.Controllers
 
         }
 
-        [HttpDelete("{id}")]
-        public ActionResult DeleteUser(int id)
+        [HttpDelete("{username}")]
+        public ActionResult DeleteUser(string username)
         {
-            var userModelFromRepo = _repository.GetUserById(id);
+            var userModelFromRepo = _repository.GetUserByUsername(username);
             
             if(userModelFromRepo == null)
             {

@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using TwitterBattlesAPI.Models;
+using System.Collections.Generic;
 
 namespace TwitterBattlesAPI.Dtos
 {
@@ -9,5 +11,6 @@ namespace TwitterBattlesAPI.Dtos
         public string DisplayName { get; set; }
         public string Password { get; set; }
         public string ImageUrl { get; set; }
+        public ICollection<Tweet> Tweets { get; set; }
     }
 }

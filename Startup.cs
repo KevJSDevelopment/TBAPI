@@ -38,7 +38,7 @@ namespace TwitterBattlesAPI
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddScoped<IUserRepo, SqlUserRepo>();
-
+            
             services.AddCors(opt => opt.AddDefaultPolicy(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
             
             services.AddSwaggerGen(c =>

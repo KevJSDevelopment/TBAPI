@@ -14,7 +14,7 @@ namespace TwitterBattlesAPI.Models
         [Required]
         public string Password { get; set; }
         [Required]
-        public string ImageUrl { get; set; }
+        public string ImageUrl { get; set; }  
         public ICollection<Tweet> Tweets { get; set; }
         // public ICollection<Tweet> LikedTweets { get; set; }
         // public ICollection<Tweet> Retweets { get; set; }
