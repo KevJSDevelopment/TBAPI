@@ -22,7 +22,7 @@ namespace TwitterBattlesAPI.Controllers
             _mapper = mapper;
         }
 
-        //GET api/Users
+        //GET poketwitter
         [HttpGet]
         public ActionResult<ICollection<UserCreateDto>> GetAllUsers()
         {
@@ -31,8 +31,9 @@ namespace TwitterBattlesAPI.Controllers
             return Ok(_mapper.Map<ICollection<UserCreateDto>>(userItems));
         }
 
-        //GET api/Users/{Username}
+        //GET poketwitter/{Username}
         [HttpGet("{Username}", Name="GetUserByUsername")]
+
         public ActionResult<UserCreateDto> GetUserByUsername(string username)
         {
             var userItem = _repository.GetUserByUsername(username);
@@ -44,6 +45,19 @@ namespace TwitterBattlesAPI.Controllers
             return NotFound();
         }
 
+        //GET poketwitter/tweet/{id}
+        [HttpGet("/poketwitter/tweets/{id}", Name="GetUserById")]
+        public ActionResult<UserCreateDto> GetUserById(int id)
+        {
+            var userItem = _repository.GetUserById(id);
+
+            if(userItem != null){
+                return Ok(_mapper.Map<UserCreateDto>(userItem));
+            }
+
+            return NotFound();
+        }
+        
         [HttpGet("/tweets")]
         public ActionResult<ICollection<Tweet>> GetTweets()
         {
@@ -70,7 +84,7 @@ namespace TwitterBattlesAPI.Controllers
             return NotFound();
 
         }
-        //POST api/Users
+        //POST poketwitter
         [HttpPost]
         public ActionResult <UserReadDto> CreateUser(UserCreateDto userCreateDto)
         {
@@ -83,7 +97,7 @@ namespace TwitterBattlesAPI.Controllers
             return CreatedAtRoute(nameof(GetUserByUsername), new {Username = userReadDto.Username}, userReadDto);
         }
 
-        //PUT api/Users/{username}
+        //PUT poketwitter/{username}
         [HttpPut("{username}")]
         public ActionResult UpdateUser(string username, UserUpdateDto userUpdateDto)
         {
@@ -103,7 +117,7 @@ namespace TwitterBattlesAPI.Controllers
             return NoContent();
         }
 
-        //PATCH api/users/{username}
+        //PATCH poketwitter/{username}
         [HttpPatch("{username}")]
         public ActionResult PartialUserUpdate(string username, JsonPatchDocument<UserUpdateDto> patchDoc)
         {

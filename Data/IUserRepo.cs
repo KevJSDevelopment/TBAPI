@@ -8,6 +8,7 @@ namespace TwitterBattlesAPI.Data
         bool SaveChanges();
         ICollection<User> GetAllUsers();
         User GetUserByUsername(string username);
+        User GetUserById(int id);
         void CreateUser(User user);
         void UpdateUser(User user);
         void DeleteUser(User user);

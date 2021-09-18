@@ -44,6 +44,11 @@ namespace TwitterBattlesAPI.Data
             return _context.Users.FirstOrDefault(p => p.Username == username);
         }
 
+        public User GetUserById(int id)
+        {
+            return _context.Users.FirstOrDefault(p => p.Id == id);
+        }
+
         public bool SaveChanges()
         {
             // save changes to database, return true if successful or false if fails
