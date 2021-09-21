@@ -36,8 +36,8 @@ namespace TwitterBattlesAPI.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<string>("mediaUrl")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("media")
+                        .HasColumnType("varbinary(max)");
 
                     b.HasKey("Id");
 
@@ -57,9 +57,8 @@ namespace TwitterBattlesAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("ImageFiles")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()

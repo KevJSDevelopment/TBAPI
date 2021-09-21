@@ -12,9 +12,7 @@ namespace TwitterBattlesAPI.Dtos
         public string DisplayName { get; set; }
         [Required]
         public string Password { get; set; }
-        [Required]
-        public string ImageUrl { get; set; }
 
-        public ICollection<Tweet> Tweets { get; set; }
+        public byte[] ImageFiles { get; set; } 
     }
 }

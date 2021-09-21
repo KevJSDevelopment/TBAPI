@@ -10,7 +10,7 @@ using TwitterBattlesAPI.Data;
 namespace TwitterBattlesAPI.Migrations
 {
     [DbContext(typeof(TwitterBattleContext))]
-    [Migration("20210915224038_InitialMigration")]
+    [Migration("20210920154018_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,8 +38,8 @@ namespace TwitterBattlesAPI.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<string>("mediaUrl")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("media")
+                        .HasColumnType("varbinary(max)");
 
                     b.HasKey("Id");
 
@@ -59,9 +59,8 @@ namespace TwitterBattlesAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("ImageFiles")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()

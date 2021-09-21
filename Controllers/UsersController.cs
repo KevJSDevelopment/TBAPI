@@ -6,6 +6,9 @@ using TwitterBattlesAPI.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace TwitterBattlesAPI.Controllers
 {
@@ -66,15 +69,23 @@ namespace TwitterBattlesAPI.Controllers
             return Ok(tweets);
         }
 
+        //POST poketwitter/{username} --add tweet
         [HttpPost("{Username}")]
-        public ActionResult<Tweet> AddTweet([FromRoute] string username, [FromBody] TweetCreateDto tweetCreateDto)
+        public ActionResult<Tweet> AddTweet([FromRoute] string username, IFormFile files, [FromForm] TweetCreateDto tweetCreateDto)
         {
             var userItem = _repository.GetUserByUsername(username);
 
             if(userItem != null && tweetCreateDto != null){
+
                 var newTweet = _mapper.Map<Tweet>(tweetCreateDto);
                 newTweet.UserId = userItem.Id;
                 newTweet.CreatedDate = DateTime.Now;
+                if(files != null){
+                    using (var target = new MemoryStream()){
+                        files.CopyTo(target);
+                        newTweet.media = target.ToArray();
+                    }
+                }
                 _repository.AddTweet(newTweet);
                 _repository.SaveChanges();
 
@@ -86,9 +97,16 @@ namespace TwitterBattlesAPI.Controllers
         }
         //POST poketwitter
         [HttpPost]
-        public ActionResult <UserReadDto> CreateUser(UserCreateDto userCreateDto)
+        public ActionResult <UserReadDto> CreateUser(IFormFile files, [FromForm] UserCreateDto userCreateDto)
         {
             var userModel = _mapper.Map<User>(userCreateDto);
+
+            if(files != null){
+                using (var target = new MemoryStream()){
+                    files.CopyTo(target);
+                    userModel.ImageFiles = target.ToArray();
+                }
+            }
             _repository.CreateUser(userModel);
             _repository.SaveChanges();
 
@@ -99,13 +117,20 @@ namespace TwitterBattlesAPI.Controllers
 
         //PUT poketwitter/{username}
         [HttpPut("{username}")]
-        public ActionResult UpdateUser(string username, UserUpdateDto userUpdateDto)
+        public ActionResult UpdateUser(string username, UserUpdateDto userUpdateDto, IFormFile files)
         {
             var userModelFromRepo = _repository.GetUserByUsername(username);
 
             if(userModelFromRepo == null)
             {
                 return NotFound();
+            }
+
+            if(files != null){
+                using (var target = new MemoryStream()){
+                    files.CopyTo(target);
+                    userModelFromRepo.ImageFiles = target.ToArray();
+                }
             }
 
             _mapper.Map(userUpdateDto, userModelFromRepo);
@@ -119,7 +144,7 @@ namespace TwitterBattlesAPI.Controllers
 
         //PATCH poketwitter/{username}
         [HttpPatch("{username}")]
-        public ActionResult PartialUserUpdate(string username, JsonPatchDocument<UserUpdateDto> patchDoc)
+        public ActionResult PartialUserUpdate(string username, JsonPatchDocument<UserUpdateDto> patchDoc, IFormFile files)
         {
 
             var userModelFromRepo = _repository.GetUserByUsername(username);
@@ -127,6 +152,13 @@ namespace TwitterBattlesAPI.Controllers
             if(userModelFromRepo == null)
             {
                 return NotFound();
+            }
+
+            if(files != null){
+                using (var target = new MemoryStream()){
+                    files.CopyTo(target);
+                    userModelFromRepo.ImageFiles = target.ToArray();
+                }
             }
 
             var userToPatch = _mapper.Map<UserUpdateDto>(userModelFromRepo);

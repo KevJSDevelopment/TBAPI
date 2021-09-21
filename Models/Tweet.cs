@@ -15,13 +15,7 @@ namespace TwitterBattlesAPI.Models
         public string Message { get; set; }
         [Required]
         public DateTime CreatedDate { get; set; }
-        public string mediaUrl { get; set; }
-        // public int Likes { get; set; }
-        // public int Retweets { get; set; }
-        // public int QuoteTweets { get; set; }
-        // public TweetType TweetType { get; set; }
-        // public string RetweetHeader { get; set; }
-        // public string QuoteTweetMessage { get; set; }
+        public byte[] media { get; set; }
 
     }
 }

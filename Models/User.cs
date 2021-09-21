@@ -13,12 +13,8 @@ namespace TwitterBattlesAPI.Models
         public string DisplayName { get; set; }
         [Required]
         public string Password { get; set; }
-        [Required]
-        public string ImageUrl { get; set; }  
+        public byte[] ImageFiles { get; set; }  
         public ICollection<Tweet> Tweets { get; set; }
-        // public ICollection<Tweet> LikedTweets { get; set; }
-        // public ICollection<Tweet> Retweets { get; set; }
-        // public ICollection<Tweet> QuoteTweets { get; set; }
 
     }
 }
