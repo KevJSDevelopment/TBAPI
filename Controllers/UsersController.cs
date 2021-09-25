@@ -194,5 +194,21 @@ namespace TwitterBattlesAPI.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("/poketwitter/tweets/{id}")]
+        public ActionResult DeleteUser(int id)
+        {
+            var tweetModel = _repository.GetTweetById(id);
+            
+            if(tweetModel == null)
+            {
+                return NotFound();
+            }
+
+            _repository.DeleteTweet(tweetModel);
+            _repository.SaveChanges();
+
+            return NoContent();
+        }
     }
 }

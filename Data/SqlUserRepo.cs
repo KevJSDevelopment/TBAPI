@@ -34,6 +34,16 @@ namespace TwitterBattlesAPI.Data
             _context.Users.Remove(user);
         }
 
+        public void DeleteTweet(Tweet tweet)
+        {
+            if(tweet == null)
+            {
+                throw new ArgumentNullException(nameof(tweet));
+            }
+
+            _context.Tweets.Remove(tweet);
+        }
+
         public ICollection<User> GetAllUsers()
         {
             return _context.Users.ToList();
@@ -47,6 +57,11 @@ namespace TwitterBattlesAPI.Data
         public User GetUserById(int id)
         {
             return _context.Users.FirstOrDefault(p => p.Id == id);
+        }
+
+        public Tweet GetTweetById(int id)
+        {
+            return _context.Tweets.FirstOrDefault(p => p.Id == id);
         }
 
         public bool SaveChanges()
