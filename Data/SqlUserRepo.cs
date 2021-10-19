@@ -56,12 +56,12 @@ namespace TwitterBattlesAPI.Data
 
         public User GetUserById(int id)
         {
-            return _context.Users.FirstOrDefault(p => p.Id == id);
+            return _context.Users.FirstOrDefault(p => p.UserId == id);
         }
 
         public Tweet GetTweetById(int id)
         {
-            return _context.Tweets.FirstOrDefault(p => p.Id == id);
+            return _context.Tweets.FirstOrDefault(p => p.TweetId == id);
         }
 
         public bool SaveChanges()

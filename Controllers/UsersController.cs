@@ -78,7 +78,7 @@ namespace TwitterBattlesAPI.Controllers
             if(userItem != null && tweetCreateDto != null){
 
                 var newTweet = _mapper.Map<Tweet>(tweetCreateDto);
-                newTweet.UserId = userItem.Id;
+                newTweet.UserId = userItem.UserId;
                 newTweet.CreatedDate = DateTime.Now;
                 if(files != null){
                     using (var target = new MemoryStream()){
