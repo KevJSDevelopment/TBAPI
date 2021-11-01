@@ -59,6 +59,11 @@ namespace TwitterBattlesAPI.Data
             return _context.Users.FirstOrDefault(p => p.UserId == id);
         }
 
+        public Follower GetFollowerById(int id)
+        {
+            return _context.Followers.FirstOrDefault(p => p.FollowerId == id);
+        }
+
         public Tweet GetTweetById(int id)
         {
             return _context.Tweets.FirstOrDefault(p => p.TweetId == id);
@@ -92,6 +97,71 @@ namespace TwitterBattlesAPI.Data
             tweets.Sort((a, b) => DateTime.Compare(b.CreatedDate, a.CreatedDate));
 
             return tweets;
+        }
+
+        public void LikeTweet(Like like){
+            _context.Likes.Add(like);
+        }
+
+        public void UnlikeTweet(Like like){
+
+            if(like == null)
+            {
+                throw new ArgumentNullException(nameof(like));
+            }
+
+            _context.Likes.Remove(like);
+        }
+
+        public void Retweet(Retweet retweet){
+            // may need updates
+            _context.Retweets.Add(retweet);
+        }
+
+        public void Unretweet(Retweet retweet){
+
+            if(retweet == null)
+            {
+                throw new ArgumentNullException(nameof(retweet));
+            }
+
+            _context.Retweets.Remove(retweet);
+        }
+
+        public void QuoteTweet(QuoteTweet quoteTweet){
+            _context.QuoteTweets.Add(quoteTweet);
+        }
+
+        public void DeleteQuoteTweet(QuoteTweet quoteTweet){
+
+            if(quoteTweet == null)
+            {
+                throw new ArgumentNullException(nameof(quoteTweet));
+            }
+
+            _context.QuoteTweets.Remove(quoteTweet);
+        }
+
+
+        public ICollection<Like> GetLikes(int tweetId){
+            // change, temporary code
+            var likes = _context.Likes.Where(l => l.TweetId == tweetId).ToList();
+
+            return likes;
+        }
+
+        public ICollection<Retweet> GetRetweets(int tweetId){
+            // change, temporary code
+            var retweets = _context.Retweets.Where(r => r.TweetId == tweetId).ToList();
+
+            return retweets;
+        }
+
+        public ICollection<QuoteTweet> GetQuoteTweets(int tweetId){
+            // change, temporary code
+            var quoteTweets = _context.QuoteTweets.Where(q => q.TweetId == tweetId).ToList();
+
+            return quoteTweets;
         }
     }
 }

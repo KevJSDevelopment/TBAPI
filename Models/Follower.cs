@@ -11,11 +11,5 @@ namespace TwitterBattlesAPI.Models
         public string Followername { get; set; }
         [Required]
         public string DisplayName { get; set; }
-
-        public byte[] ImageFiles { get; set; }  
-
-        public ICollection<Tweet> Tweets { get; set; }
-
-        public ICollection<User> Users { get; set; }
     }
 }

@@ -210,5 +210,94 @@ namespace TwitterBattlesAPI.Controllers
 
             return NoContent();
         }
+
+        [HttpPost("/poketwitter/liketweet/{id}")]
+        public ActionResult<Like> LikeTweet(int id, TweetReadDto tweet)
+        {
+            var user = _repository.GetUserById(tweet.UserId);
+            var userWhoLikedTweet = _repository.GetUserById(id);
+
+            if(userWhoLikedTweet.Username == user.Username || tweet == null || userWhoLikedTweet == null || user == null){
+                return NotFound();
+            }
+
+            var likes = _repository.GetLikes(tweet.TweetId);
+
+
+            foreach (var likeObj in likes)
+            {
+                if(likeObj.TweetId == tweet.TweetId && likeObj.UserId == userWhoLikedTweet.UserId){
+                    _repository.UnlikeTweet(likeObj);
+                    _repository.SaveChanges();
+                    return Ok("unliked tweet");
+                }
+            }
+
+            var like = new Like();
+
+            
+            like.UserId = userWhoLikedTweet.UserId;
+            like.TweetId = tweet.TweetId;
+
+            _repository.LikeTweet(like);
+            _repository.SaveChanges();
+
+            return Ok(like);
+        }
+
+        [HttpPost("/poketwitter/retweet/{id}")]
+        public ActionResult<Retweet> Retweet(int id, TweetReadDto tweet)
+        {
+            var user = _repository.GetUserById(tweet.UserId);
+            var userWhoLikedTweet = _repository.GetUserById(id);
+
+            if(userWhoLikedTweet.Username == user.Username || tweet == null || userWhoLikedTweet == null || user == null){
+                return NotFound();
+            }
+
+            var retweets = _repository.GetRetweets(tweet.TweetId);
+
+
+            foreach (var retweetObject in retweets)
+            {
+                if(retweetObject.TweetId == tweet.TweetId && retweetObject.UserId == userWhoLikedTweet.UserId){
+                    _repository.Unretweet(retweetObject);
+                    _repository.SaveChanges();
+                    return Ok("Unretweeted");
+                }
+            }
+
+            var retweet = new Retweet();
+
+            retweet.UserId = userWhoLikedTweet.UserId;
+            retweet.TweetId = tweet.TweetId;
+            
+            _repository.Retweet(retweet);
+            _repository.SaveChanges();
+
+            return Ok(retweet);
+        }
+
+        [HttpPost("/poketwitter/quotetweet/{id}")]
+        public ActionResult<QuoteTweet> QuoteTweet(int id, TweetReadDto tweet)
+        {
+            var user = _repository.GetUserById(tweet.UserId);
+            var userWhoLikedTweet = _repository.GetUserById(id);
+
+            if(userWhoLikedTweet.Username == user.Username || tweet == null || userWhoLikedTweet == null || user == null){
+                return NotFound();
+            }
+
+            var quoteTweet = new QuoteTweet();
+
+            quoteTweet.UserId = userWhoLikedTweet.UserId;
+            quoteTweet.TweetId = tweet.TweetId;
+            quoteTweet.message = tweet.NewMessage;
+            
+            _repository.QuoteTweet(quoteTweet);
+            _repository.SaveChanges();
+
+            return Ok(quoteTweet);
+        }
     }
 }

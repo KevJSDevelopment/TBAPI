@@ -14,6 +14,7 @@ namespace TwitterBattlesAPI.Profiles
             CreateMap<UserUpdateDto, User>();
             CreateMap<User, UserUpdateDto>();
             CreateMap<TweetCreateDto, Tweet>();
+            CreateMap<TweetReadDto, Tweet>();
         }
     }
 }

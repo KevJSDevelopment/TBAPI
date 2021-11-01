@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TwitterBattlesAPI.ModelHelpers;
 
 namespace TwitterBattlesAPI.Models
 {
