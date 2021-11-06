@@ -4,12 +4,11 @@ using System.Collections.Generic;
 
 namespace TwitterBattlesAPI.Dtos
 {
-    public class UserReadDto
+    public class UserLoginDto
     {
+        [Required]
         public string Username { get; set; }
-        public string DisplayName { get; set; }
+        [Required]
         public string Password { get; set; }
-        public byte[] ImageFiles { get; set; } 
-        public ICollection<Tweet> Tweets { get; set; }
     }
 }

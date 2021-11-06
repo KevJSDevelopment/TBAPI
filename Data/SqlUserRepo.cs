@@ -90,7 +90,16 @@ namespace TwitterBattlesAPI.Data
             _context.Tweets.Add(tweet);
         }
 
-        public ICollection<Tweet> GetTweets() 
+        public ICollection<Tweet> GetTweets(int userId) 
+        {
+            var tweets = _context.Tweets.Where(tweet => tweet.UserId == userId).ToList();
+
+            tweets.Sort((a, b) => DateTime.Compare(b.CreatedDate, a.CreatedDate));
+
+            return tweets;
+        }
+
+        public ICollection<Tweet> GetTweetFeed(int userId) 
         {
             var tweets = _context.Tweets.ToList();
 

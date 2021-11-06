@@ -9,6 +9,7 @@ using System;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Newtonsoft.Json;
+using TwitterBattlesAPI.HelperClasses;
 
 namespace TwitterBattlesAPI.Controllers
 {
@@ -45,7 +46,11 @@ namespace TwitterBattlesAPI.Controllers
                 return Ok(_mapper.Map<UserCreateDto>(userItem));
             }
 
-            return NotFound();
+            var response = new BadRequestResponse();
+            response.status = 400;
+            response.error = "Username is incorrect";
+
+            return BadRequest(error: JsonConvert.SerializeObject(response));
         }
 
         //GET poketwitter/tweet/{id}
@@ -58,13 +63,43 @@ namespace TwitterBattlesAPI.Controllers
                 return Ok(_mapper.Map<UserCreateDto>(userItem));
             }
 
-            return NotFound();
+            var response = new BadRequestResponse();
+            response.status = 400;
+            response.error = "Id is incorrect";
+
+            return BadRequest(error: JsonConvert.SerializeObject(response));
+        }
+
+        [HttpPost("/login")]
+        public ActionResult<User> Login(UserLoginDto userLoginDto)
+        {
+            var user = _repository.GetUserByUsername(userLoginDto.Username);
+            if(user != null && user.Password == userLoginDto.Password){
+                return Ok(_mapper.Map<UserReadDto>(user));
+            }
+
+            var response = new BadRequestResponse();
+            response.status = 400;
+            response.error = "Username or password is incorrect";
+
+            return BadRequest(error: JsonConvert.SerializeObject(response));
         }
         
-        [HttpGet("/tweets")]
-        public ActionResult<ICollection<Tweet>> GetTweets()
+        [HttpGet("/{username}")]
+        public ActionResult<ICollection<Tweet>> GetTweets(string username)
         {
-            var tweets = _repository.GetTweets();
+            var user = _repository.GetUserByUsername(username);
+
+            var tweets = _repository.GetTweets(user.UserId);
+
+            return Ok(tweets);
+        }
+        [HttpGet("/home/{username}")]
+        public ActionResult<ICollection<Tweet>> GetTweetFeed(string username)
+        {
+            var user = _repository.GetUserByUsername(username);
+
+            var tweets = _repository.GetTweetFeed(user.UserId);
 
             return Ok(tweets);
         }
@@ -92,8 +127,7 @@ namespace TwitterBattlesAPI.Controllers
                 return Ok(newTweet);
             }
             
-            return NotFound();
-
+            return BadRequest();
         }
         //POST poketwitter
         [HttpPost]
@@ -123,7 +157,7 @@ namespace TwitterBattlesAPI.Controllers
 
             if(userModelFromRepo == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             if(files != null){
@@ -151,7 +185,7 @@ namespace TwitterBattlesAPI.Controllers
 
             if(userModelFromRepo == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             if(files != null){
@@ -186,7 +220,7 @@ namespace TwitterBattlesAPI.Controllers
             
             if(userModelFromRepo == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             _repository.DeleteUser(userModelFromRepo);
@@ -196,13 +230,13 @@ namespace TwitterBattlesAPI.Controllers
         }
 
         [HttpDelete("/poketwitter/tweets/{id}")]
-        public ActionResult DeleteUser(int id)
+        public ActionResult DeleteTweet(int id)
         {
             var tweetModel = _repository.GetTweetById(id);
             
             if(tweetModel == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             _repository.DeleteTweet(tweetModel);
@@ -218,7 +252,7 @@ namespace TwitterBattlesAPI.Controllers
             var userWhoLikedTweet = _repository.GetUserById(id);
 
             if(userWhoLikedTweet.Username == user.Username || tweet == null || userWhoLikedTweet == null || user == null){
-                return NotFound();
+                return BadRequest();
             }
 
             var likes = _repository.GetLikes(tweet.TweetId);
@@ -252,7 +286,7 @@ namespace TwitterBattlesAPI.Controllers
             var userWhoLikedTweet = _repository.GetUserById(id);
 
             if(userWhoLikedTweet.Username == user.Username || tweet == null || userWhoLikedTweet == null || user == null){
-                return NotFound();
+                return BadRequest();
             }
 
             var retweets = _repository.GetRetweets(tweet.TweetId);
@@ -285,7 +319,7 @@ namespace TwitterBattlesAPI.Controllers
             var userWhoLikedTweet = _repository.GetUserById(id);
 
             if(userWhoLikedTweet.Username == user.Username || tweet == null || userWhoLikedTweet == null || user == null){
-                return NotFound();
+                return BadRequest();
             }
 
             var quoteTweet = new QuoteTweet();

@@ -25,6 +25,7 @@ namespace TwitterBattlesAPI.Data
         ICollection<Like> GetLikes(int tweetId);
         ICollection<Retweet> GetRetweets(int tweetId);
         ICollection<QuoteTweet> GetQuoteTweets(int tweetId);
-        ICollection<Tweet> GetTweets();
+        ICollection<Tweet> GetTweets(int userId);
+        ICollection<Tweet> GetTweetFeed(int userId);
     }
 }
