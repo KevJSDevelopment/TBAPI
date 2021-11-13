@@ -9,6 +9,6 @@ namespace TwitterBattlesAPI.Dtos
         [Required]
         public int UserId { get; set; }
 
-        public string NewMessage { get; set; }
+        public string Message { get; set; }
     }
 }

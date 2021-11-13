@@ -10,6 +10,7 @@ namespace TwitterBattlesAPI.Data
 
         }
 
+
         public DbSet<User> Users { get; set; }
 
         public DbSet<Tweet> Tweets { get; set; }
@@ -29,6 +30,49 @@ namespace TwitterBattlesAPI.Data
             modelBuilder.Entity<User>()
             .HasAlternateKey(k => k.Username)
             .HasName("AlternateKey_Username");
+
+            modelBuilder.Entity<Like>().HasKey(l => new { l.UserId, l.TweetId });
+
+            modelBuilder.Entity<Like>()
+            .HasOne(u => u.User)
+            .WithMany(tu => tu.LikedTweets)
+            .HasForeignKey(ti => ti.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Like>()
+            .HasOne(u => u.Tweet)
+            .WithMany(tu => tu.UserLikes)
+            .HasForeignKey(ti => ti.TweetId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Retweet>().HasKey(r => new { r.UserId, r.TweetId });
+
+            modelBuilder.Entity<Retweet>()
+            .HasOne(u => u.User)
+            .WithMany(tu => tu.Retweets)
+            .HasForeignKey(ti => ti.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Retweet>()
+            .HasOne(u => u.Tweet)
+            .WithMany(tu => tu.UserRetweets)
+            .HasForeignKey(ti => ti.TweetId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<QuoteTweet>().HasKey(qt => new { qt.UserId, qt.TweetId, qt.Message });
+
+            modelBuilder.Entity<QuoteTweet>()
+            .HasOne(u => u.User)
+            .WithMany(tu => tu.QuoteTweets)
+            .HasForeignKey(ti => ti.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<QuoteTweet>()
+            .HasOne(u => u.Tweet)
+            .WithMany(tu => tu.UserReplies)
+            .HasForeignKey(ti => ti.TweetId)
+            .OnDelete(DeleteBehavior.Restrict);
         }
+        
     }
 }

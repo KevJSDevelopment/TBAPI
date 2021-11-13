@@ -1,12 +1,10 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace TwitterBattlesAPI.Models
 {
     public class TweetUser
     {
-        [Required]
         public int UserId { get; set; }
-        [Required]
+        public virtual User User { get; set; }
         public int TweetId { get; set; }
+        public virtual Tweet Tweet { get; set; }
     }
 }

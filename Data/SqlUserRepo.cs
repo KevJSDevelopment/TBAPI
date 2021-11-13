@@ -172,5 +172,15 @@ namespace TwitterBattlesAPI.Data
 
             return quoteTweets;
         }
+
+
+        public ICollection<Like> GetUserLikes(int userId){
+            // change, temporary code
+            var likes = _context.Likes.Where(l => l.UserId == userId).ToList();
+
+            return likes;
+        }
+
+
     }
 }

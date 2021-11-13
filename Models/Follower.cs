@@ -7,9 +7,7 @@ namespace TwitterBattlesAPI.Models
     {
         [Key]
         public int FollowerId { get; set; }
-        [Required]
         public string Followername { get; set; }
-        [Required]
         public string DisplayName { get; set; }
     }
 }

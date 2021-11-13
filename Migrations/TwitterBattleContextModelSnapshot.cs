@@ -27,11 +27,9 @@ namespace TwitterBattlesAPI.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("DisplayName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Followername")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("UserId")
@@ -46,58 +44,48 @@ namespace TwitterBattlesAPI.Migrations
 
             modelBuilder.Entity("TwitterBattlesAPI.Models.Like", b =>
                 {
-                    b.Property<int>("LikeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<int>("TweetId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.HasKey("UserId", "TweetId");
 
-                    b.HasKey("LikeId");
+                    b.HasIndex("TweetId");
 
                     b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("TwitterBattlesAPI.Models.QuoteTweet", b =>
                 {
-                    b.Property<int>("QuoteTweetId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<int>("TweetId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("UserId", "TweetId", "Message");
 
-                    b.HasKey("QuoteTweetId");
+                    b.HasIndex("TweetId");
 
                     b.ToTable("QuoteTweets");
                 });
 
             modelBuilder.Entity("TwitterBattlesAPI.Models.Retweet", b =>
                 {
-                    b.Property<int>("RetweetId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
                     b.Property<int>("TweetId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.HasKey("UserId", "TweetId");
 
-                    b.HasKey("RetweetId");
+                    b.HasIndex("TweetId");
 
                     b.ToTable("Retweets");
                 });
@@ -112,15 +100,14 @@ namespace TwitterBattlesAPI.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<byte[]>("Media")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Message")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
-
-                    b.Property<byte[]>("media")
-                        .HasColumnType("varbinary(max)");
 
                     b.HasKey("TweetId");
 
@@ -137,14 +124,12 @@ namespace TwitterBattlesAPI.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("DisplayName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("ImageFiles")
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Password")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
@@ -184,6 +169,63 @@ namespace TwitterBattlesAPI.Migrations
                         .HasForeignKey("UserId");
                 });
 
+            modelBuilder.Entity("TwitterBattlesAPI.Models.Like", b =>
+                {
+                    b.HasOne("TwitterBattlesAPI.Models.Tweet", "Tweet")
+                        .WithMany("UserLikes")
+                        .HasForeignKey("TweetId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TwitterBattlesAPI.Models.User", "User")
+                        .WithMany("LikedTweets")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tweet");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TwitterBattlesAPI.Models.QuoteTweet", b =>
+                {
+                    b.HasOne("TwitterBattlesAPI.Models.Tweet", "Tweet")
+                        .WithMany("UserReplies")
+                        .HasForeignKey("TweetId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TwitterBattlesAPI.Models.User", "User")
+                        .WithMany("QuoteTweets")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tweet");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TwitterBattlesAPI.Models.Retweet", b =>
+                {
+                    b.HasOne("TwitterBattlesAPI.Models.Tweet", "Tweet")
+                        .WithMany("UserRetweets")
+                        .HasForeignKey("TweetId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TwitterBattlesAPI.Models.User", "User")
+                        .WithMany("Retweets")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Tweet");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TwitterBattlesAPI.Models.Tweet", b =>
                 {
                     b.HasOne("TwitterBattlesAPI.Models.User", null)
@@ -193,9 +235,24 @@ namespace TwitterBattlesAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TwitterBattlesAPI.Models.Tweet", b =>
+                {
+                    b.Navigation("UserLikes");
+
+                    b.Navigation("UserReplies");
+
+                    b.Navigation("UserRetweets");
+                });
+
             modelBuilder.Entity("TwitterBattlesAPI.Models.User", b =>
                 {
                     b.Navigation("Followers");
+
+                    b.Navigation("LikedTweets");
+
+                    b.Navigation("QuoteTweets");
+
+                    b.Navigation("Retweets");
 
                     b.Navigation("Tweets");
                 });

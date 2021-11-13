@@ -22,9 +22,12 @@ namespace TwitterBattlesAPI.Data
         void Unretweet(Retweet retweet);
         void QuoteTweet(QuoteTweet quoteTweet);
         void DeleteQuoteTweet(QuoteTweet quoteTweet);
+
         ICollection<Like> GetLikes(int tweetId);
         ICollection<Retweet> GetRetweets(int tweetId);
         ICollection<QuoteTweet> GetQuoteTweets(int tweetId);
+        ICollection<Like> GetUserLikes(int userId);
+
         ICollection<Tweet> GetTweets(int userId);
         ICollection<Tweet> GetTweetFeed(int userId);
     }

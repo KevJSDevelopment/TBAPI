@@ -8,14 +8,13 @@ namespace TwitterBattlesAPI.Models
     {
         [Key]
         public int TweetId { get; set; }
-        [Required]
         public int UserId { get; set; }
-        [Required]
         public string Message { get; set; }
-        [Required]
         public DateTime CreatedDate { get; set; }
-        
-        public byte[] media { get; set; }
+        public byte[] Media { get; set; }
+        public ICollection<Like> UserLikes { get; set; }
+        public ICollection<Retweet> UserRetweets { get; set; }
+        public ICollection<QuoteTweet> UserReplies { get; set; }
 
     }
 }

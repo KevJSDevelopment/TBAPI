@@ -33,6 +33,7 @@ namespace TwitterBattlesAPI
 
             services.AddControllers().AddNewtonsoftJson(s => {
                 s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                s.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
