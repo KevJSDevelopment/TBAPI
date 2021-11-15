@@ -46,9 +46,9 @@ namespace TwitterBattlesAPI.Controllers
                 return Ok(_mapper.Map<UserCreateDto>(userItem));
             }
 
-            var response = new BadRequestResponse();
-            response.status = 400;
-            response.error = "Username is incorrect";
+            RequestResponse response = new RequestResponse();
+            response.Status = 400;
+            response.Message = "Username is incorrect";
 
             return BadRequest(error: JsonConvert.SerializeObject(response));
         }
@@ -63,9 +63,9 @@ namespace TwitterBattlesAPI.Controllers
                 return Ok(_mapper.Map<UserCreateDto>(userItem));
             }
 
-            var response = new BadRequestResponse();
-            response.status = 400;
-            response.error = "Id is incorrect";
+            RequestResponse response = new RequestResponse();
+            response.Status = 400;
+            response.Message = "Id is incorrect";
 
             return BadRequest(error: JsonConvert.SerializeObject(response));
         }
@@ -78,9 +78,9 @@ namespace TwitterBattlesAPI.Controllers
                 return Ok(_mapper.Map<UserReadDto>(user));
             }
 
-            var response = new BadRequestResponse();
-            response.status = 400;
-            response.error = "Username or password is incorrect";
+            RequestResponse response = new RequestResponse();
+            response.Status = 400;
+            response.Message = "Username or password is incorrect";
 
             return BadRequest(error: JsonConvert.SerializeObject(response));
         }
@@ -264,7 +264,13 @@ namespace TwitterBattlesAPI.Controllers
                 if(likeObj.TweetId == tweet.TweetId && likeObj.UserId == userWhoLikedTweet.UserId){
                     _repository.UnlikeTweet(likeObj);
                     _repository.SaveChanges();
-                    return Ok("unliked tweet");
+
+
+                    RequestResponse requestResponse = new RequestResponse();
+                    requestResponse.Status = 204;
+                    requestResponse.Message = "unliked tweet";
+
+                    return Ok(JsonConvert.SerializeObject(requestResponse));
                 }
             }
 
@@ -280,7 +286,7 @@ namespace TwitterBattlesAPI.Controllers
             return Ok(like);
         }
 
-        [HttpPost("/poketwitter/retweet/{id}")]
+        [HttpPost("/poketwitter/retweets/{id}")]
         public ActionResult<Retweet> Retweet(int id, TweetReadDto tweetReadDto)
         {
             var tweet = _repository.GetTweetById(tweetReadDto.TweetId);
@@ -299,7 +305,12 @@ namespace TwitterBattlesAPI.Controllers
                 if(retweetObject.TweetId == tweet.TweetId && retweetObject.UserId == userWhoLikedTweet.UserId){
                     _repository.Unretweet(retweetObject);
                     _repository.SaveChanges();
-                    return Ok("Unretweeted");
+
+                    RequestResponse requestResponse = new RequestResponse();
+                    requestResponse.Status = 204;
+                    requestResponse.Message = "unretweeted";
+
+                    return Ok(JsonConvert.SerializeObject(requestResponse));
                 }
             }
 
@@ -338,15 +349,59 @@ namespace TwitterBattlesAPI.Controllers
             _repository.QuoteTweet(quoteTweet);
             _repository.SaveChanges();
 
-            return Ok(quoteTweet);
+            return Ok();
         }
+
+        [HttpPost("/poketwitter/checklike/{id}")]
+        public ActionResult<Like> CheckLike(int id, TweetReadDto tweetReadDto)
+        {
+            Like like = _repository.CheckLike(id, tweetReadDto.TweetId);
+
+            if(like != null){
+                return Ok(like);
+            }
+
+            RequestResponse response = new RequestResponse();
+
+            response.Status = 204;
+            response.Message = "Like not found";
+
+            return Ok(JsonConvert.SerializeObject(response));
+        }
+
 
         [HttpGet("/poketwitter/likes/{id}")]
         public ActionResult<ICollection<UserReadDto>> GetLikes(int id)
         {
             var userItems = _repository.GetLikes(id);
 
-            return Ok(_mapper.Map<ICollection<UserReadDto>>(userItems));
+            return Ok(userItems);
+        }
+
+        [HttpPost("/poketwitter/checkretweet/{id}")]
+        public ActionResult<Retweet> CheckRetweet(int id, TweetReadDto tweetReadDto)
+        {
+            Retweet retweet = _repository.CheckRetweet(id, tweetReadDto.TweetId);
+
+            if(retweet != null){
+                return Ok(retweet);
+            }
+
+            RequestResponse response = new RequestResponse();
+
+            response.Status = 204;
+            response.Message = "Retweet not found";
+
+            return Ok(JsonConvert.SerializeObject(response));
+        }
+
+
+        [HttpGet("/poketwitter/retweets/{id}")]
+        public ActionResult<ICollection<UserReadDto>> GetRetweets(int id)
+        {
+            var userItems = _repository.GetRetweets(id);
+
+            return Ok(userItems);
         }
     }
 }

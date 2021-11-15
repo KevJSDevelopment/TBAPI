@@ -23,7 +23,9 @@ namespace TwitterBattlesAPI.Data
         void QuoteTweet(QuoteTweet quoteTweet);
         void DeleteQuoteTweet(QuoteTweet quoteTweet);
 
+        Like CheckLike(int userId, int tweetId);
         ICollection<Like> GetLikes(int tweetId);
+        Retweet CheckRetweet(int userId, int tweetId);
         ICollection<Retweet> GetRetweets(int tweetId);
         ICollection<QuoteTweet> GetQuoteTweets(int tweetId);
         ICollection<Like> GetUserLikes(int userId);

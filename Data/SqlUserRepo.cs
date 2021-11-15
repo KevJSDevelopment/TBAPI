@@ -156,14 +156,60 @@ namespace TwitterBattlesAPI.Data
             // change, temporary code
             var likes = _context.Likes.Where(l => l.TweetId == tweetId).ToList();
 
+
+            foreach (var like in likes)
+            {
+                User user = GetUserById(like.UserId);
+                Tweet tweet = GetTweetById(like.TweetId);
+                like.User = user;
+                like.Tweet = tweet;
+            }
+
             return likes;
+        }
+
+
+        public Like CheckLike(int userId, int tweetId){
+            // change, temporary code
+            var like = _context.Likes.FirstOrDefault(l => l.TweetId == tweetId && l.UserId == userId);
+
+            if(like != null){
+                User user = GetUserById(like.UserId);
+                Tweet tweet = GetTweetById(like.TweetId);
+                like.User = user;
+                like.Tweet = tweet;
+            }
+
+            return like;
         }
 
         public ICollection<Retweet> GetRetweets(int tweetId){
             // change, temporary code
             var retweets = _context.Retweets.Where(r => r.TweetId == tweetId).ToList();
 
+            foreach (var retweet in retweets)
+            {
+                User user = GetUserById(retweet.UserId);
+                Tweet tweet = GetTweetById(retweet.TweetId);
+                retweet.User = user;
+                retweet.Tweet = tweet;
+            }
+
             return retweets;
+        }
+
+        public Retweet CheckRetweet(int userId, int tweetId){
+            // change, temporary code
+            var retweet = _context.Retweets.FirstOrDefault(r => r.TweetId == tweetId && r.UserId == userId);
+
+            if(retweet != null){
+                User user = GetUserById(retweet.UserId);
+                Tweet tweet = GetTweetById(retweet.TweetId);
+                retweet.User = user;
+                retweet.Tweet = tweet;
+            }
+
+            return retweet;
         }
 
         public ICollection<QuoteTweet> GetQuoteTweets(int tweetId){
