@@ -252,7 +252,7 @@ namespace TwitterBattlesAPI.Controllers
             var user = _repository.GetUserById(tweet.UserId);
             var userWhoLikedTweet = _repository.GetUserById(id);
 
-            if(userWhoLikedTweet.Username == user.Username || tweet == null || userWhoLikedTweet == null || user == null){
+            if(tweet == null || userWhoLikedTweet == null || user == null){
                 return BadRequest();
             }
 
@@ -293,7 +293,7 @@ namespace TwitterBattlesAPI.Controllers
             var user = _repository.GetUserById(tweet.UserId);
             var userWhoLikedTweet = _repository.GetUserById(id);
 
-            if(userWhoLikedTweet.Username == user.Username || tweet == null || userWhoLikedTweet == null || user == null){
+            if(tweet == null || userWhoLikedTweet == null || user == null){
                 return BadRequest();
             }
 
@@ -334,7 +334,7 @@ namespace TwitterBattlesAPI.Controllers
             var user = _repository.GetUserById(tweet.UserId);
             var userWhoLikedTweet = _repository.GetUserById(id);
 
-            if(userWhoLikedTweet.Username == user.Username || tweet == null || userWhoLikedTweet == null || user == null){
+            if(tweet == null || userWhoLikedTweet == null || user == null){
                 return BadRequest();
             }
 
@@ -349,7 +349,7 @@ namespace TwitterBattlesAPI.Controllers
             _repository.QuoteTweet(quoteTweet);
             _repository.SaveChanges();
 
-            return Ok();
+            return Ok(quoteTweet);
         }
 
         [HttpPost("/poketwitter/checklike/{id}")]
@@ -373,9 +373,9 @@ namespace TwitterBattlesAPI.Controllers
         [HttpGet("/poketwitter/likes/{id}")]
         public ActionResult<ICollection<UserReadDto>> GetLikes(int id)
         {
-            var userItems = _repository.GetLikes(id);
+            var likes = _repository.GetLikes(id);
 
-            return Ok(userItems);
+            return Ok(likes);
         }
 
         [HttpPost("/poketwitter/checkretweet/{id}")]
@@ -399,9 +399,17 @@ namespace TwitterBattlesAPI.Controllers
         [HttpGet("/poketwitter/retweets/{id}")]
         public ActionResult<ICollection<UserReadDto>> GetRetweets(int id)
         {
-            var userItems = _repository.GetRetweets(id);
+            var retweets = _repository.GetRetweets(id);
 
-            return Ok(userItems);
+            return Ok(retweets);
+        }
+
+        [HttpGet("/poketwitter/quotetweets/{id}")]
+        public ActionResult<ICollection<UserReadDto>> GetQuoteTweets(int id)
+        {
+            var quoteTweets = _repository.GetQuoteTweets(id);
+
+            return Ok(quoteTweets);
         }
     }
 }

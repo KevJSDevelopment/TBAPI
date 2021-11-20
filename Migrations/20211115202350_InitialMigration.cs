@@ -109,13 +109,15 @@ namespace TwitterBattlesAPI.Migrations
                 name: "QuoteTweets",
                 columns: table => new
                 {
+                    quoteTweetId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    TweetId = table.Column<int>(type: "int", nullable: false),
-                    Message = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    TweetId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_QuoteTweets", x => new { x.UserId, x.TweetId, x.Message });
+                    table.PrimaryKey("PK_QuoteTweets", x => x.quoteTweetId);
                     table.ForeignKey(
                         name: "FK_QuoteTweets_Tweets_TweetId",
                         column: x => x.TweetId,
@@ -168,6 +170,11 @@ namespace TwitterBattlesAPI.Migrations
                 name: "IX_QuoteTweets_TweetId",
                 table: "QuoteTweets",
                 column: "TweetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_QuoteTweets_UserId",
+                table: "QuoteTweets",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Retweets_TweetId",

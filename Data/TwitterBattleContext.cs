@@ -59,7 +59,7 @@ namespace TwitterBattlesAPI.Data
             .HasForeignKey(ti => ti.TweetId)
             .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<QuoteTweet>().HasKey(qt => new { qt.UserId, qt.TweetId, qt.Message });
+            modelBuilder.Entity<QuoteTweet>().HasKey(qt => new { qt.quoteTweetId });
 
             modelBuilder.Entity<QuoteTweet>()
             .HasOne(u => u.User)

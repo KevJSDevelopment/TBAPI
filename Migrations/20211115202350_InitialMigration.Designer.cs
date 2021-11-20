@@ -10,7 +10,7 @@ using TwitterBattlesAPI.Data;
 namespace TwitterBattlesAPI.Migrations
 {
     [DbContext(typeof(TwitterBattleContext))]
-    [Migration("20211110022438_InitialMigration")]
+    [Migration("20211115202350_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,18 +61,25 @@ namespace TwitterBattlesAPI.Migrations
 
             modelBuilder.Entity("TwitterBattlesAPI.Models.QuoteTweet", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<int>("quoteTweetId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TweetId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.HasKey("UserId", "TweetId", "Message");
+                    b.HasKey("quoteTweetId");
 
                     b.HasIndex("TweetId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("QuoteTweets");
                 });

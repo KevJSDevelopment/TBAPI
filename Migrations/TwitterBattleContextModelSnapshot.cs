@@ -59,18 +59,25 @@ namespace TwitterBattlesAPI.Migrations
 
             modelBuilder.Entity("TwitterBattlesAPI.Models.QuoteTweet", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<int>("quoteTweetId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TweetId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Message")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
 
-                    b.HasKey("UserId", "TweetId", "Message");
+                    b.HasKey("quoteTweetId");
 
                     b.HasIndex("TweetId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("QuoteTweets");
                 });

@@ -216,6 +216,14 @@ namespace TwitterBattlesAPI.Data
             // change, temporary code
             var quoteTweets = _context.QuoteTweets.Where(q => q.TweetId == tweetId).ToList();
 
+            foreach (var quoteTweet in quoteTweets)
+            {
+                User user = GetUserById(quoteTweet.UserId);
+                Tweet tweet = GetTweetById(quoteTweet.TweetId);
+                quoteTweet.User = user;
+                quoteTweet.Tweet = tweet;
+            }
+
             return quoteTweets;
         }
 
