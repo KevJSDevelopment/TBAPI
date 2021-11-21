@@ -84,6 +84,17 @@ namespace TwitterBattlesAPI.Controllers
 
             return BadRequest(error: JsonConvert.SerializeObject(response));
         }
+
+        [HttpGet("/poketwitter/viewtweet/{id}")]
+        public ActionResult<Tweet> GetTweetById(int id)
+        {
+            var tweet = _repository.GetTweetById(id);
+            tweet.UserLikes = _repository.GetLikes(id);
+            tweet.UserRetweets = _repository.GetRetweets(id);
+            tweet.UserReplies = _repository.GetQuoteTweets(id);
+
+            return Ok(tweet);
+        }
         
         [HttpGet("/{username}")]
         public ActionResult<ICollection<Tweet>> GetTweets(string username)
@@ -94,6 +105,7 @@ namespace TwitterBattlesAPI.Controllers
 
             return Ok(tweets);
         }
+
         [HttpGet("/home/{username}")]
         public ActionResult<ICollection<Tweet>> GetTweetFeed(string username)
         {
@@ -328,7 +340,7 @@ namespace TwitterBattlesAPI.Controllers
         }
 
         [HttpPost("/poketwitter/quotetweet/{id}")]
-        public ActionResult<QuoteTweet> QuoteTweet(int id, TweetReadDto tweetReadDto)
+        public ActionResult<QuoteTweet> QuoteTweet([FromRoute] int id, IFormFile files, [FromForm] TweetReadDto tweetReadDto)
         {
             var tweet = _repository.GetTweetById(tweetReadDto.TweetId);
             var user = _repository.GetUserById(tweet.UserId);
@@ -344,7 +356,13 @@ namespace TwitterBattlesAPI.Controllers
             quoteTweet.User = userWhoLikedTweet;
             quoteTweet.TweetId = tweet.TweetId;
             quoteTweet.Tweet = tweet;
-            quoteTweet.Message = tweet.Message;
+            quoteTweet.Message = tweetReadDto.Message;
+            if(files != null){
+                using (var target = new MemoryStream()){
+                    files.CopyTo(target);
+                    quoteTweet.Media = target.ToArray();
+                }
+            }
             
             _repository.QuoteTweet(quoteTweet);
             _repository.SaveChanges();

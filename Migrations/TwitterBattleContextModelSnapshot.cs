@@ -64,6 +64,9 @@ namespace TwitterBattlesAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<byte[]>("Media")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 

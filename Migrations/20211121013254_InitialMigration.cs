@@ -112,6 +112,7 @@ namespace TwitterBattlesAPI.Migrations
                     quoteTweetId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Media = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     TweetId = table.Column<int>(type: "int", nullable: false)
                 },

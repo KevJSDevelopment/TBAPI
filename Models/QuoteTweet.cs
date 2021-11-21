@@ -6,5 +6,6 @@ namespace TwitterBattlesAPI.Models
     {
         public int quoteTweetId { get; set; }
         public string Message { get; set; }
+        public byte[] Media { get; set; }
     }
 }

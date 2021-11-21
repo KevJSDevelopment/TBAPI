@@ -156,15 +156,6 @@ namespace TwitterBattlesAPI.Data
             // change, temporary code
             var likes = _context.Likes.Where(l => l.TweetId == tweetId).ToList();
 
-
-            foreach (var like in likes)
-            {
-                User user = GetUserById(like.UserId);
-                Tweet tweet = GetTweetById(like.TweetId);
-                like.User = user;
-                like.Tweet = tweet;
-            }
-
             return likes;
         }
 
@@ -187,14 +178,6 @@ namespace TwitterBattlesAPI.Data
             // change, temporary code
             var retweets = _context.Retweets.Where(r => r.TweetId == tweetId).ToList();
 
-            foreach (var retweet in retweets)
-            {
-                User user = GetUserById(retweet.UserId);
-                Tweet tweet = GetTweetById(retweet.TweetId);
-                retweet.User = user;
-                retweet.Tweet = tweet;
-            }
-
             return retweets;
         }
 
@@ -215,14 +198,6 @@ namespace TwitterBattlesAPI.Data
         public ICollection<QuoteTweet> GetQuoteTweets(int tweetId){
             // change, temporary code
             var quoteTweets = _context.QuoteTweets.Where(q => q.TweetId == tweetId).ToList();
-
-            foreach (var quoteTweet in quoteTweets)
-            {
-                User user = GetUserById(quoteTweet.UserId);
-                Tweet tweet = GetTweetById(quoteTweet.TweetId);
-                quoteTweet.User = user;
-                quoteTweet.Tweet = tweet;
-            }
 
             return quoteTweets;
         }

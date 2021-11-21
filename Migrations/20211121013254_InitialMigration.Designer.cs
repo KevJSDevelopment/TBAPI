@@ -10,7 +10,7 @@ using TwitterBattlesAPI.Data;
 namespace TwitterBattlesAPI.Migrations
 {
     [DbContext(typeof(TwitterBattleContext))]
-    [Migration("20211115202350_InitialMigration")]
+    [Migration("20211121013254_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -65,6 +65,9 @@ namespace TwitterBattlesAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("Media")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
