@@ -23,8 +23,6 @@ namespace TwitterBattlesAPI.Data
 
         public DbSet<Retweet> Retweets { get; set; }
 
-        public DbSet<QuoteTweet> QuoteTweets { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
@@ -58,20 +56,7 @@ namespace TwitterBattlesAPI.Data
             .WithMany(tu => tu.UserRetweets)
             .HasForeignKey(ti => ti.TweetId)
             .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<QuoteTweet>().HasKey(qt => new { qt.quoteTweetId });
-
-            modelBuilder.Entity<QuoteTweet>()
-            .HasOne(u => u.User)
-            .WithMany(tu => tu.QuoteTweets)
-            .HasForeignKey(ti => ti.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<QuoteTweet>()
-            .HasOne(u => u.Tweet)
-            .WithMany(tu => tu.UserReplies)
-            .HasForeignKey(ti => ti.TweetId)
-            .OnDelete(DeleteBehavior.Restrict);
+            
         }
         
     }

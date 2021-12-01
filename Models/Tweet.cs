@@ -14,7 +14,7 @@ namespace TwitterBattlesAPI.Models
         public byte[] Media { get; set; }
         public ICollection<Like> UserLikes { get; set; }
         public ICollection<Retweet> UserRetweets { get; set; }
-        public ICollection<QuoteTweet> UserReplies { get; set; }
+        public int RepliedToTweetId { get; set; }
 
     }
 }

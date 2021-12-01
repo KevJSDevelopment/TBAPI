@@ -101,7 +101,8 @@ namespace TwitterBattlesAPI.Data
 
         public ICollection<Tweet> GetTweetFeed(int userId) 
         {
-            var tweets = _context.Tweets.ToList();
+
+            var tweets = _context.Tweets.Where(tweet => tweet.RepliedToTweetId == 0).ToList();
 
             tweets.Sort((a, b) => DateTime.Compare(b.CreatedDate, a.CreatedDate));
 
@@ -137,22 +138,8 @@ namespace TwitterBattlesAPI.Data
             _context.Retweets.Remove(retweet);
         }
 
-        public void QuoteTweet(QuoteTweet quoteTweet){
-            _context.QuoteTweets.Add(quoteTweet);
-        }
 
-        public void DeleteQuoteTweet(QuoteTweet quoteTweet){
-
-            if(quoteTweet == null)
-            {
-                throw new ArgumentNullException(nameof(quoteTweet));
-            }
-
-            _context.QuoteTweets.Remove(quoteTweet);
-        }
-
-
-        public ICollection<Like> GetLikes(int tweetId){
+        public ICollection<Like> GetTweetLikes(int tweetId){
             // change, temporary code
             var likes = _context.Likes.Where(l => l.TweetId == tweetId).ToList();
 
@@ -195,19 +182,49 @@ namespace TwitterBattlesAPI.Data
             return retweet;
         }
 
-        public ICollection<QuoteTweet> GetQuoteTweets(int tweetId){
+        public ICollection<Tweet> GetTweetReplies(int tweetId){
             // change, temporary code
-            var quoteTweets = _context.QuoteTweets.Where(q => q.TweetId == tweetId).ToList();
+            var replies = _context.Tweets.Where(q => q.RepliedToTweetId == tweetId).ToList();
 
-            return quoteTweets;
+            return replies;
         }
 
+        public ICollection<Tweet> GetUserTweets(int userId){
+            // change, temporary code
+            var tweets = _context.Tweets.Where(l => l.UserId == userId && l.RepliedToTweetId == 0).ToList();
 
-        public ICollection<Like> GetUserLikes(int userId){
+            return tweets;
+        }
+
+        public ICollection<Tweet> GetUserTweetsAndReplies(int userId){
+            // change, temporary code
+            var tweetsAndReplies = _context.Tweets.Where(l => l.UserId == userId).ToList();
+
+
+            return tweetsAndReplies;
+        }
+
+        public ICollection<Tweet> GetUserMediaTweets(int userId){
+            // change, temporary code
+            var mediaTweets = _context.Tweets.Where(t => (t.UserId == userId) && (t.Media != null) && (t.Media.Length > 0)).ToList();
+
+            return mediaTweets;
+        }
+
+        
+        public ICollection<Tweet> GetUserLikes(int userId){
             // change, temporary code
             var likes = _context.Likes.Where(l => l.UserId == userId).ToList();
 
-            return likes;
+            List<Tweet> tweets = new List<Tweet>();
+
+            foreach (var like in likes)
+            {
+                var tweet = _context.Tweets.FirstOrDefault(t => t.TweetId == like.TweetId);
+                tweets.Add(tweet);
+            }
+
+            return tweets;
         }
 
 

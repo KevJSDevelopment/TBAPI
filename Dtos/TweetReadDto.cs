@@ -12,5 +12,7 @@ namespace TwitterBattlesAPI.Dtos
         public string Message { get; set; }
 
         public byte[] media { get; set; }
+        
+        public int RepliedToTweetId { get; set; }
     }
 }

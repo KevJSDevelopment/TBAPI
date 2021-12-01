@@ -20,15 +20,18 @@ namespace TwitterBattlesAPI.Data
         void UnlikeTweet(Like like);
         void Retweet(Retweet retweet);
         void Unretweet(Retweet retweet);
-        void QuoteTweet(QuoteTweet quoteTweet);
-        void DeleteQuoteTweet(QuoteTweet quoteTweet);
 
         Like CheckLike(int userId, int tweetId);
-        ICollection<Like> GetLikes(int tweetId);
+        ICollection<Like> GetTweetLikes(int tweetId);
         Retweet CheckRetweet(int userId, int tweetId);
         ICollection<Retweet> GetRetweets(int tweetId);
-        ICollection<QuoteTweet> GetQuoteTweets(int tweetId);
-        ICollection<Like> GetUserLikes(int userId);
+        ICollection<Tweet> GetTweetReplies(int tweetId);
+
+        
+        ICollection<Tweet> GetUserTweets(int userId);
+        ICollection<Tweet> GetUserTweetsAndReplies(int userId);
+        ICollection<Tweet> GetUserMediaTweets(int userId);
+        ICollection<Tweet> GetUserLikes(int userId);
 
         ICollection<Tweet> GetTweets(int userId);
         ICollection<Tweet> GetTweetFeed(int userId);

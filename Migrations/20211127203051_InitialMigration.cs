@@ -29,8 +29,10 @@ namespace TwitterBattlesAPI.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Bio = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ImageFiles = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                    ImageFiles = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    BackgroundImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -68,7 +70,8 @@ namespace TwitterBattlesAPI.Migrations
                     UserId = table.Column<int>(type: "int", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Media = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                    Media = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    RepliedToTweetId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -99,34 +102,6 @@ namespace TwitterBattlesAPI.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Likes_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "QuoteTweets",
-                columns: table => new
-                {
-                    quoteTweetId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Media = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    TweetId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_QuoteTweets", x => x.quoteTweetId);
-                    table.ForeignKey(
-                        name: "FK_QuoteTweets_Tweets_TweetId",
-                        column: x => x.TweetId,
-                        principalTable: "Tweets",
-                        principalColumn: "TweetId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_QuoteTweets_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -168,16 +143,6 @@ namespace TwitterBattlesAPI.Migrations
                 column: "TweetId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuoteTweets_TweetId",
-                table: "QuoteTweets",
-                column: "TweetId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_QuoteTweets_UserId",
-                table: "QuoteTweets",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Retweets_TweetId",
                 table: "Retweets",
                 column: "TweetId");
@@ -195,9 +160,6 @@ namespace TwitterBattlesAPI.Migrations
 
             migrationBuilder.DropTable(
                 name: "Likes");
-
-            migrationBuilder.DropTable(
-                name: "QuoteTweets");
 
             migrationBuilder.DropTable(
                 name: "Retweets");
