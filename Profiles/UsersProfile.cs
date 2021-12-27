@@ -16,6 +16,10 @@ namespace TwitterBattlesAPI.Profiles
             CreateMap<TweetCreateDto, Tweet>();
             CreateMap<TweetReadDto, Tweet>();
             CreateMap<UserLoginDto, UserReadDto>();
+            CreateMap<WalletCreateDto, WalletAddress>();
+            CreateMap<BookmarkCreateDto, Bookmark>();
+            CreateMap<MessageCreateDto, Message>();
+            CreateMap<FollowerCreateDto, Follower>();
         }
     }
 }

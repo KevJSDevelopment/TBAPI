@@ -17,17 +17,29 @@ namespace TwitterBattlesAPI.Data
 
         public DbSet<Follower> Followers { get; set; }
 
-        public DbSet<UserFollower> UserFollowers { get; set; }
-
         public DbSet<Like> Likes { get; set; }
 
         public DbSet<Retweet> Retweets { get; set; }
+        
+        public DbSet<WalletAddress> WalletAddresses { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
+
+        public DbSet<Notification> Notifications { get; set; }
+
+        public DbSet<Bookmark> Bookmarks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
             .HasAlternateKey(k => k.Username)
             .HasName("AlternateKey_Username");
+
+            modelBuilder.Entity<WalletAddress>()
+            .HasAlternateKey(k => k.Address)
+            .HasName("AlternateKey_Address");
+
+            modelBuilder.Entity<Follower>().HasKey(f => new { f.UserThatFollowedId, f.UserBeingFollowedId });
 
             modelBuilder.Entity<Like>().HasKey(l => new { l.UserId, l.TweetId });
 

@@ -142,7 +142,7 @@ namespace TwitterBattlesAPI.Controllers
         }
         //POST poketwitter
         [HttpPost]
-        public ActionResult <UserReadDto> CreateUser(IFormFile files, [FromForm] UserCreateDto userCreateDto)
+        public ActionResult <UserReadDto> CreateUser(IFormFile files, IFormFile background, [FromForm] UserCreateDto userCreateDto)
         {
             var userModel = _mapper.Map<User>(userCreateDto);
 
@@ -152,6 +152,14 @@ namespace TwitterBattlesAPI.Controllers
                     userModel.ImageFiles = target.ToArray();
                 }
             }
+
+            if(background != null){
+                using (var target = new MemoryStream()){
+                    background.CopyTo(target);
+                    userModel.BackgroundImage = target.ToArray();
+                }
+            }
+
             _repository.CreateUser(userModel);
             _repository.SaveChanges();
 
@@ -432,5 +440,129 @@ namespace TwitterBattlesAPI.Controllers
 
             return Ok(replies);
         }
+
+        [HttpGet("/poketwitter/wallets/{username}")]
+        public ActionResult<ICollection<WalletAddress>> GetWallets(string username)
+        {
+            var user = _repository.GetUserByUsername(username);
+            var wallets = _repository.GetWalletsByUserId(user.UserId);
+
+            return Ok(wallets);
+        }
+
+        [HttpPost("/poketwitter/wallets")]
+        public ActionResult <WalletAddress> AddWallet(WalletCreateDto walletCreateDto)
+        {
+            var walletAddress = _mapper.Map<WalletAddress>(walletCreateDto);
+
+            _repository.AddWallet(walletAddress);
+            _repository.SaveChanges();
+
+            return Ok(walletAddress);
+        }
+
+        [HttpPost("/poketwitter/bookmarks")]
+        public ActionResult <Bookmark> AddBookmark(BookmarkCreateDto bookmarkCreateDto)
+        {
+            var bookmark = _mapper.Map<Bookmark>(bookmarkCreateDto);
+
+            _repository.AddBookmark(bookmark);
+            _repository.SaveChanges();
+
+            return Ok(bookmark);
+        }
+
+        [HttpPost("/poketwitter/messages")]
+        public ActionResult <Message> AddMessage(MessageCreateDto messageCreateDto)
+        {
+            var message = _mapper.Map<Message>(messageCreateDto);
+
+            _repository.AddMessage(message);
+            _repository.SaveChanges();
+
+            return Ok(message);
+        }
+
+        [HttpGet("/poketwitter/bookmarks/{username}")]
+        public ActionResult<ICollection<Bookmark>> GetBookmarks(string username) {
+            var user = _repository.GetUserByUsername(username);
+            var bookmarkedTweets = _repository.GetBookmarks(user.UserId);
+            
+            return Ok(bookmarkedTweets);
+        }
+
+        [HttpGet("/poketwitter/notifications/{username}")]
+        public ActionResult<ICollection<Notification>> GetNotifications(string username) {
+            var user = _repository.GetUserByUsername(username);
+            var notifications = _repository.GetNotifications(user.UserId);
+            
+            return Ok(notifications);
+        }
+
+        [HttpGet("/poketwitter/messages/{loggedInUserId}/{otherUserId}")]
+        public ActionResult<ICollection<Message>> GetMessages(int loggedInUserId, int otherUserId){
+            var messages = _repository.GetMessages(loggedInUserId, otherUserId);
+
+            return Ok(messages);
+        }
+
+        [HttpPost("/poketwitter/followers")]
+        public ActionResult<Follower> AddFollow(FollowerCreateDto followerCreateDto){
+
+            var follower = _mapper.Map<Follower>(followerCreateDto);
+
+            _repository.AddFollow(follower);
+            _repository.SaveChanges();
+
+            return Ok(follower);
+        }
+
+        [HttpDelete("/poketwitter/followers")]
+        public ActionResult<Follower> DeleteFollow(FollowerCreateDto followerCreateDto){
+
+            var follower = _mapper.Map<Follower>(followerCreateDto);
+
+            if(follower == null)
+            {
+                return BadRequest();
+            }
+
+            _repository.DeleteFollow(follower);
+            _repository.SaveChanges();
+
+            return NoContent();
+        }
+
+        [HttpGet("/poketwitter/followers/{userThatFollowedId}/{userBeingFollowedId}")]
+        public ActionResult<Follower> CheckFollowing(int userThatFollowedId, int userBeingFollowedId){
+            var follow = _repository.CheckFollowing(userThatFollowedId, userBeingFollowedId);
+
+            if(follow != null){
+                return Ok(follow);
+            }
+
+            RequestResponse response = new RequestResponse();
+
+            response.Status = 204;
+            response.Message = "Follow not found";
+
+            return Ok(JsonConvert.SerializeObject(response));
+        }
+
+        [HttpGet("/poketwitter/followers/{userId}")]
+        public ActionResult<ICollection<Follower>> GetFollowers(int userId){
+            var followers = _repository.GetFollowers(userId);
+
+            return Ok(followers);
+        }
+
+        [HttpGet("/poketwitter/following/{userId}")]
+        public ActionResult<ICollection<Follower>> GetFollowing(int userId){
+            var following = _repository.GetFollowing(userId);
+
+            return Ok(following);
+        }
+
+        
     }
 }

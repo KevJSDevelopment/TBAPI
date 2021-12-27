@@ -6,6 +6,7 @@ namespace TwitterBattlesAPI.Dtos
 {
     public class UserLoginDto
     {
+        public int UserId { get; set; }
         [Required]
         public string Username { get; set; }
         [Required]
