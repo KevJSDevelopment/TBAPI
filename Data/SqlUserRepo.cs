@@ -261,7 +261,6 @@ namespace TwitterBattlesAPI.Data
                 bookmarkedTweets.Add(tweet);
             }
 
-            bookmarkedTweets.Sort((a, b) => DateTime.Compare(b.CreatedDate, a.CreatedDate));
 
             return bookmarkedTweets;
         }
@@ -269,16 +268,12 @@ namespace TwitterBattlesAPI.Data
         public ICollection<Notification> GetNotifications(int userId) {
             var notifications = _context.Notifications.Where(b => b.UserId == userId).ToList();
 
-            notifications.Sort((a, b) => DateTime.Compare(b.CreatedDate, a.CreatedDate));
-            
             return notifications;
         }
 
 
         public ICollection<Message> GetMessages(int loggedInUserId, int otherUserId){
             var messages = _context.Messages.Where(m => m.UserReceivingMessageId == loggedInUserId &&  m.UserWhoMessagedId == loggedInUserId || m.UserWhoMessagedId == loggedInUserId &&  m.UserReceivingMessageId == loggedInUserId).ToList();
-
-            messages.Sort((a, b) => DateTime.Compare(b.CreatedDate, a.CreatedDate));
             
             return messages;
         }

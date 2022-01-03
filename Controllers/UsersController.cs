@@ -168,9 +168,9 @@ namespace TwitterBattlesAPI.Controllers
             return CreatedAtRoute(nameof(GetUserByUsername), new {Username = userReadDto.Username}, userReadDto);
         }
 
-        //PUT poketwitter/{username}
-        [HttpPut("{username}")]
-        public ActionResult UpdateUser(string username, UserUpdateDto userUpdateDto, IFormFile files)
+        //PUT update/{username}
+        [HttpPut("update/{username}")]
+        public ActionResult UpdateUser(string username, UserUpdateDto userUpdateDto, IFormFile files, IFormFile backgroundImage, IFormFile nftProfileImage)
         {
             var userModelFromRepo = _repository.GetUserByUsername(username);
 
@@ -183,6 +183,13 @@ namespace TwitterBattlesAPI.Controllers
                 using (var target = new MemoryStream()){
                     files.CopyTo(target);
                     userModelFromRepo.ImageFiles = target.ToArray();
+                }
+            }
+
+            if(backgroundImage != null){
+                using (var target = new MemoryStream()){
+                    backgroundImage.CopyTo(target);
+                    userModelFromRepo.BackgroundImage = target.ToArray();
                 }
             }
 
@@ -195,9 +202,9 @@ namespace TwitterBattlesAPI.Controllers
             return NoContent();
         }
 
-        //PATCH poketwitter/{username}
-        [HttpPatch("{username}")]
-        public ActionResult PartialUserUpdate(string username, JsonPatchDocument<UserUpdateDto> patchDoc, IFormFile files)
+        //PATCH update/{username}
+        [HttpPatch("update/{username}")]
+        public ActionResult PartialUserUpdate(string username, JsonPatchDocument<UserUpdateDto> patchDoc)
         {
 
             var userModelFromRepo = _repository.GetUserByUsername(username);
@@ -205,13 +212,6 @@ namespace TwitterBattlesAPI.Controllers
             if(userModelFromRepo == null)
             {
                 return BadRequest();
-            }
-
-            if(files != null){
-                using (var target = new MemoryStream()){
-                    files.CopyTo(target);
-                    userModelFromRepo.ImageFiles = target.ToArray();
-                }
             }
 
             var userToPatch = _mapper.Map<UserUpdateDto>(userModelFromRepo);
@@ -562,7 +562,6 @@ namespace TwitterBattlesAPI.Controllers
 
             return Ok(following);
         }
-
         
     }
 }

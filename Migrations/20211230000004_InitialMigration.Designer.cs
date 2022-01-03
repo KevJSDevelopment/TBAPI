@@ -10,7 +10,7 @@ using TwitterBattlesAPI.Data;
 namespace TwitterBattlesAPI.Migrations
 {
     [DbContext(typeof(TwitterBattleContext))]
-    [Migration("20211221212514_InitialMigration")]
+    [Migration("20211230000004_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -193,12 +193,18 @@ namespace TwitterBattlesAPI.Migrations
                     b.Property<byte[]>("ImageFiles")
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<byte[]>("NFTProfileImage")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("UsingNFT")
+                        .HasColumnType("bit");
 
                     b.HasKey("UserId");
 

@@ -12,6 +12,8 @@ namespace TwitterBattlesAPI.Models
         public string Bio { get; set; }
         public string Password { get; set; }
         public byte[] ImageFiles { get; set; }  
+        public string NFTProfileImage { get; set; }
+        public bool UsingNFT { get; set; }
         public byte[] BackgroundImage { get; set; }
         public ICollection<WalletAddress> WalletAddresses { get; set; }
         public ICollection<Tweet> Tweets { get; set; }

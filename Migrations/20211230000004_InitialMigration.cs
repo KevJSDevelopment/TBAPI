@@ -33,6 +33,8 @@ namespace TwitterBattlesAPI.Migrations
                     Bio = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImageFiles = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    NFTProfileImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    UsingNFT = table.Column<bool>(type: "bit", nullable: false),
                     BackgroundImage = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
